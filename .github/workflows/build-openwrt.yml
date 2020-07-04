@@ -1,10 +1,6 @@
-#=================================================
-#=================================================
-
 name: Build armbian
 
 on:
-  repository_dispatch:
   release:
     types: published
   push:
@@ -16,14 +12,15 @@ on:
 #    - cron: 0 8 * * 5
   watch:
     types: started
-
+    
 env:
-  REPO_URL: https://github.com/150balbes/Build-Armbian
+  REPO_URL: https://github.com/150balbes/Build-armbian
   REPO_BRANCH: master
   CONFIG_FILE: .config
   DIY_P1_SH: diy-part1.sh
   DIY_P2_SH: diy-part2.sh
   SSH_ACTIONS: false
+  UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_WETRANSFER: true
   TZ: Asia/Shanghai
@@ -49,14 +46,14 @@ jobs:
         sudo timedatectl set-timezone "$TZ"
         sudo mkdir -p /workdir
         sudo chown $USER:$GROUPS /workdir
-
+        
     - name: Clone source code
       working-directory: /workdir
       run: |
         df -hT $PWD
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH armbian
         ln -sf /workdir/armbian $GITHUB_WORKSPACE/armbian
-
+        
     - name: Load custom configuration
       run: |
         [ -e files ] && mv files armbian/files
@@ -64,7 +61,7 @@ jobs:
         chmod +x $DIY_P2_SH
         cd armbian
         $GITHUB_WORKSPACE/$DIY_P2_SH
-
+        
     - name: SSH connection to Actions
       uses: P3TERX/debugger-action@master
       if: env.SSH_ACTIONS == 'true' || contains(github.event.action, 'ssh')
@@ -73,22 +70,22 @@ jobs:
       id: compile
       run: |
         cd armbian
-        ./compile.sh
-        
+        ./compile.sh BOARD="lepotato" BRANCH="current" RELEASE="focal" CARD_DEVICE="/dev/sda" \KERNEL_ONLY="no" KERNEL_CONFIGURE="no" INSTALL_HEADERS="yes" BUILD_DESKTOP="no" BUILD_MINIMAL="no" 
+
     - name: Organize files
       id: organize
       if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       run: |
-        cd armbian/output/*/*
- #       rm -rf packages
+        cd armbian/output/images/*/*
+        rm -rf packages
         echo "::set-env name=FIRMWARE::$PWD"
         echo "::set-output name=status::success"
-
+        
     - name: Upload firmware directory
       uses: actions/upload-artifact@master
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
-        name: armbian_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+        name: Armbian_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: ${{ env.FIRMWARE }}
 
     - name: Upload firmware to WeTransfer
