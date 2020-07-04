@@ -73,8 +73,7 @@ jobs:
       id: organize
       if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       run: |
-        cd armbian/output/images/*/*
-        rm -rf packages
+        cd armbian/output/images/*
         echo "::set-env name=FIRMWARE::$PWD"
         echo "::set-output name=status::success"
         
