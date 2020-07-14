@@ -19,7 +19,7 @@ env:
   CONFIG_FILE: .config
   DIY_P1_SH: diy-part1.sh
   DIY_P2_SH: diy-part2.sh
-  SSH_ACTIONS: true
+  SSH_ACTIONS: false
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_WETRANSFER: false
@@ -70,7 +70,7 @@ jobs:
       id: compile
       run: |
         cd armbian
-        ./compile.sh BOARD="Arm-64" BRANCH="current" RELEASE="focal" CARD_DEVICE="/dev/sda" \KERNEL_ONLY="no" KERNEL_CONFIGURE="no" INSTALL_HEADERS="yes" BUILD_DESKTOP="no" BUILD_MINIMAL="no" 
+        ./compile.sh BOARD="arm-64" BRANCH="current" RELEASE="focal" CARD_DEVICE="/dev/sda" \KERNEL_ONLY="no" KERNEL_CONFIGURE="no" INSTALL_HEADERS="yes" BUILD_DESKTOP="no" BUILD_MINIMAL="no" 
 
     - name: Organize files
       id: organize
