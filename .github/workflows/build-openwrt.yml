@@ -14,7 +14,7 @@ on:
     types: started
     
 env:
-  REPO_URL: https://github.com/150balbes/Build-Armbian
+  REPO_URL: https://github.com/armbian/build
   REPO_BRANCH: master
   CONFIG_FILE: .config
   DIY_P1_SH: diy-part1.sh
@@ -70,7 +70,7 @@ jobs:
       id: compile
       run: |
         cd armbian
-        ./compile.sh BOARD="arm-64" BRANCH="current" RELEASE="focal" CARD_DEVICE="/dev/sda" \KERNEL_ONLY="no" KERNEL_CONFIGURE="no" INSTALL_HEADERS="yes" BUILD_DESKTOP="no" BUILD_MINIMAL="no" 
+        ./compile.sh BOARD="lepotato" BRANCH="current" RELEASE="focal" CARD_DEVICE="/dev/sda" \KERNEL_ONLY="no" KERNEL_CONFIGURE="no" INSTALL_HEADERS="yes" BUILD_DESKTOP="no" BUILD_MINIMAL="no" 
 
     - name: Organize files
       id: organize
