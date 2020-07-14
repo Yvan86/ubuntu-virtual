@@ -70,7 +70,7 @@ jobs:
       id: compile
       run: |
         cd armbian
-        ./compile.sh BOARD="lepotato" BRANCH="current" RELEASE="focal" CARD_DEVICE="/dev/sda" \KERNEL_ONLY="no" KERNEL_CONFIGURE="no" INSTALL_HEADERS="yes" BUILD_DESKTOP="no" BUILD_MINIMAL="no" 
+        ./compile.sh BOARD="Arm-64" BRANCH="current" RELEASE="focal" CARD_DEVICE="/dev/sda" \KERNEL_ONLY="no" KERNEL_CONFIGURE="no" INSTALL_HEADERS="yes" BUILD_DESKTOP="no" BUILD_MINIMAL="no" 
 
     - name: Organize files
       id: organize
