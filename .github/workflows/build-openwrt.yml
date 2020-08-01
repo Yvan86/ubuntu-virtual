@@ -1,13 +1,13 @@
 name: Build armbian
 
 on:
-  release:
-    types: published
-  push:
-    branches:
-      - master
-    paths:
-      - '.config'
+#  release:
+#    types: published
+#  push:
+#    branches:
+#      - master
+#    paths:
+#      - '.config'
 #  schedule:
 #    - cron: 0 8 * * 5
   watch:
@@ -21,8 +21,8 @@ env:
   DIY_P2_SH: diy-part2.sh
   SSH_ACTIONS: true
   UPLOAD_BIN_DIR: false
-  UPLOAD_FIRMWARE: true
-  UPLOAD_WETRANSFER: false
+  UPLOAD_FIRMWARE: false
+  UPLOAD_WETRANSFER: true
   TZ: Asia/Shanghai
 
 jobs:
@@ -66,11 +66,11 @@ jobs:
       uses: P3TERX/debugger-action@master
       if: env.SSH_ACTIONS == 'true' || contains(github.event.action, 'ssh')       
 
-    - name: Compile the firmware
-      id: compile
-      run: |
-        cd armbian
-        ./compile.sh BOARD="lepotato" BRANCH="current" RELEASE="focal" CARD_DEVICE="/dev/sda" \KERNEL_ONLY="no" KERNEL_CONFIGURE="no" INSTALL_HEADERS="yes" BUILD_DESKTOP="no" BUILD_MINIMAL="no" 
+#    - name: Compile the firmware
+#      id: compile
+#      run: |
+#        cd armbian
+#        ./compile.sh BOARD="lepotato" BRANCH="current" RELEASE="focal" CARD_DEVICE="/dev/sda" \KERNEL_ONLY="no" KERNEL_CONFIGURE="no" INSTALL_HEADERS="yes" BUILD_DESKTOP="no" BUILD_MINIMAL="no" 
 
     - name: Organize files
       id: organize
