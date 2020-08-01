@@ -62,6 +62,8 @@ jobs:
         chmod +x $DIY_P2_SH
         cd armbian
         $GITHUB_WORKSPACE/$DIY_P2_SH
+        sudo apt update
+        sudo apt upgrade
         
     - name: SSH connection to Actions
       uses: P3TERX/debugger-action@master
