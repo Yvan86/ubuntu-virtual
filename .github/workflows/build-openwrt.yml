@@ -40,7 +40,6 @@ jobs:
       run: |
         sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
         sudo -E apt-get -qq update
-        sudo -E apt-get -qq upgrade
         sudo -E apt-get -qq install $(curl -fsSL git.io/depends-ubuntu-1804)
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
@@ -51,6 +50,8 @@ jobs:
     - name: Clone source code
       working-directory: /workdir
       run: |
+        sudo apt update
+        sudo apt upgrade -y
         df -hT $PWD
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH armbian
         ln -sf /workdir/armbian $GITHUB_WORKSPACE/armbian
@@ -62,8 +63,6 @@ jobs:
         chmod +x $DIY_P2_SH
         cd armbian
         $GITHUB_WORKSPACE/$DIY_P2_SH
-        sudo apt update
-        sudo apt upgrade
         
     - name: SSH connection to Actions
       uses: P3TERX/debugger-action@master
