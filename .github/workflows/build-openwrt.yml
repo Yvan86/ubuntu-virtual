@@ -79,6 +79,9 @@ jobs:
       if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       run: |
         cd armbian/output
+        sudo tar -czvf output.tar.gz images debug
+        sudo rm -rf images debug
+        sudo rm -rf debs*
         echo "::set-env name=FIRMWARE::$PWD"
         echo "::set-output name=status::success"
         
