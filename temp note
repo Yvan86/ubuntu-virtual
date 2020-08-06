@@ -5,13 +5,20 @@ config  debs  debs-beta  debug  images  patch
 ./config:
 
 ./debs:
-armbian-config_20.08.0-trunk_all.deb         armbian-firmware_20.08.0-trunk_all.deb  focal                                              linux-headers-current-meson64_20.08.0-trunk_arm64.deb  linux-source-current-meson64_20.08.0-trunk_all.deb
-armbian-firmware-full_20.08.0-trunk_all.deb  extra                                   linux-dtb-current-meson64_20.08.0-trunk_arm64.deb  linux-image-current-meson64_20.08.0-trunk_arm64.deb    linux-u-boot-current-lepotato_20.08.0-trunk_arm64.deb
+armbian-config_20.08.0-trunk_all.deb         
+armbian-firmware_20.08.0-trunk_all.deb  focal                                              
+linux-headers-current-meson64_20.08.0-trunk_arm64.deb  
+linux-source-current-meson64_20.08.0-trunk_all.deb
+armbian-firmware-full_20.08.0-trunk_all.deb  extra                                   
+linux-dtb-current-meson64_20.08.0-trunk_arm64.deb  
+linux-image-current-meson64_20.08.0-trunk_arm64.deb    
+linux-u-boot-current-lepotato_20.08.0-trunk_arm64.deb
 
 ./debs/extra:
 
 ./debs/focal:
-armbian-focal-desktop_20.08.0-trunk_all.deb  linux-focal-root-current-lepotato_20.08.0-trunk_arm64.deb
+armbian-focal-desktop_20.08.0-trunk_all.deb  
+linux-focal-root-current-lepotato_20.08.0-trunk_arm64.deb
 
 ./debs-beta:
 extra
@@ -19,7 +26,17 @@ extra
 ./debs-beta/extra:
 
 ./debug:
-compilation.log  compiler.log  install.log  installed-packages-focal.list  logs-.tgz  logs-06_08_2020-18_35_54.tgz  output.log  patching.log  timestamp
+compilation.log  
+compiler.log  
+install.log  
+installed-packages-focal.list  
+logs-.tgz  
+logs-06_08_2020-18_35_54.tgz  
+output.log  
+patching.log  
+timestamp
 
 ./images:
-Armbian_20.08.0-trunk_Lepotato_focal_current_5.7.13.img  Armbian_20.08.0-trunk_Lepotato_focal_current_5.7.13.img.sha  Armbian_20.08.0-trunk_Lepotato_focal_current_5.7.13.img.txt
+Armbian_20.08.0-trunk_Lepotato_focal_current_5.7.13.img  
+Armbian_20.08.0-trunk_Lepotato_focal_current_5.7.13.img.sha  
+Armbian_20.08.0-trunk_Lepotato_focal_current_5.7.13.img.txt
