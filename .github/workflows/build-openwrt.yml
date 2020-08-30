@@ -70,19 +70,23 @@ jobs:
 
     - name: Compile the firmware
       id: compile
+      if: env.SSH_ACTIONS == 'false'
       run: |
         cd armbian
-        ./compile.sh BOARD="lepotato" BRANCH="current" RELEASE="focal" CARD_DEVICE="/dev/sda" \KERNEL_ONLY="no" KERNEL_CONFIGURE="no" INSTALL_HEADERS="yes" BUILD_DESKTOP="no" BUILD_MINIMAL="no" 
+        ./compile.sh BOARD="arm-64" BRANCH="current" RELEASE="focal" KERNEL_ONLY="no" KERNEL_CONFIGURE="no" BUILD_DESKTOP="no" BUILD_MINIMAL="no"
 
     - name: Organize files
       id: organize
       if: env.UPLOAD_FIRMWARE == 'true' || 'false' && !cancelled()
       run: |
         cd armbian/output
-        sudo tar -czvf output.tar.gz images debug
+        echo "::set-env name=FIRMWARE::$PWD"
+        sudo tar -czvf images.tar.gz images
+        sudo tar -czvf debug.tar.gz debug
+        sudo tar -czvf debs.tar.gz debs
+        sudo tar -czvf config.tar.gz config
         sudo rm -rf images debug
         sudo rm -rf debs*
-        echo "::set-env name=FIRMWARE::$PWD"
         echo "::set-output name=status::success"
         
     - name: Upload firmware directory
@@ -93,7 +97,7 @@ jobs:
         path: ${{ env.FIRMWARE }}
 
     - name: Upload firmware to WeTransfer
-      if: steps.organize.outputs.status == 'success' && env.UPLOAD_WETRANSFER == 'true' && !cancelled()
+      if: env.UPLOAD_WETRANSFER == 'true' && !cancelled()
       run: |
         curl -fsSL git.io/file-transfer | sh
         ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
