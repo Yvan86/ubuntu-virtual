@@ -73,7 +73,7 @@ jobs:
       if: env.SSH_ACTIONS == 'false'
       run: |
         cd armbian
-        ./compile.sh BOARD="arm-64" BRANCH="current" RELEASE="focal" KERNEL_ONLY="no" KERNEL_CONFIGURE="no" BUILD_DESKTOP="no" BUILD_MINIMAL="no"
+        ./compile.sh BOARD="nanopik2-s905" BRANCH="current" RELEASE="focal" KERNEL_ONLY="no" KERNEL_CONFIGURE="no" BUILD_DESKTOP="no" BUILD_MINIMAL="no"
 
     - name: Organize files
       id: organize
