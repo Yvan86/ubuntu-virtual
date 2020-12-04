@@ -59,11 +59,7 @@ jobs:
     - name: Load custom configuration
       run: |
         [ -e files ] && mv files armbian/files
-        [ -e $CONFIG_FILE ] && mv $CONFIG_FILE armbian/.config
-        chmod +x $DIY_P2_SH
         patch $GITHUB_WORKSPACE/armbian/config/kernel/linux-meson64-current.config linux-meson64-current.config.patch
-        cd armbian
-        $GITHUB_WORKSPACE/$DIY_P2_SH
         
     - name: SSH connection to Actions
       uses: csexton/debugger-action@master
