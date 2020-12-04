@@ -58,7 +58,11 @@ jobs:
         
     - name: Load custom configuration
       run: |
-         mv files $GITHUB_WORKSPACE/armbian/files
+        [ -e files ] && mv files openwrt/files
+        [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+        chmod +x $DIY_P2_SH
+        cd openwrt
+        $GITHUB_WORKSPACE/$DIY_P2_SH
         
     - name: SSH connection to Actions
       uses: csexton/debugger-action@master
