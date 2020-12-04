@@ -58,7 +58,7 @@ jobs:
         
     - name: Load custom configuration
       run: |
-        [ -e files ] && mv files $GITHUB_WORKSPACE/armbian/files
+         mv files $GITHUB_WORKSPACE/armbian/files
         
     - name: SSH connection to Actions
       uses: csexton/debugger-action@master
