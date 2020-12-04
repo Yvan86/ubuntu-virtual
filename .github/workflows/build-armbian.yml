@@ -60,7 +60,7 @@ jobs:
       run: |
         [ -e files ] && mv files armbian/files
         chmod +x $DIY_P2_SH
-        patch $GITHUB_WORKSPACE/armbian/config/kernel/linux-meson64-current.config linux-meson64-current.config.patch
+        patch $GITHUB_WORKSPACE/armbian/config/kernel/linux-meson64-current.config linux-meson64-current.config.patch -y
         cd armbian
         $GITHUB_WORKSPACE/$DIY_P2_SH
         
