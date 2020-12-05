@@ -80,7 +80,7 @@ jobs:
       if: env.UPLOAD_FIRMWARE == 'true' || 'false' && !cancelled()
       run: |
         cd armbian/output
-        echo "::set-env name=FIRMWARE::$PWD"
+        echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         sudo tar -czvf images.tar.gz images
         sudo tar -czvf debug.tar.gz debug
         sudo tar -czvf debs.tar.gz debs
