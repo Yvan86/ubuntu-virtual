@@ -26,7 +26,7 @@ BOARD：开发板的名称，对应窗口界面的开发板选择部分；
 
 BRANCH（legacy|current|dev）：内核版本设置，对应窗口界面的内核选择部分；
 
-RELEASE（stretch|buster|bionic|focal）：操作系统设置，对应窗口界面的操作系统版本选择部分；
+RELEASE（stretch|buster|bionic|focal）：操作系统设置，对应窗口界面的操作系统版本选择部分； 
 
 BUILD_MINIMAL（yes|no）：“yes” 代表编译最小的可运行系统，而且不能编译有桌面环境的运行系统，“no” 则可以有桌面环境设置；
 
