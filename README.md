@@ -1,6 +1,3 @@
-   首先需要说明的是 Armbian 的编译设置还是相当灵活的，比如可以根据用户的需求修改配置选项、设置编译参数、注入代码等，实现了在不修改原有代码框架的基础上编译出用户所需要的运行系统，从而为客户化定制提供了灵活的方法和技术支撑。
-
-要做客户化编译首先就是要明确自己的需求是什么，缺省编译生成的运行系统有哪些内容需要做调整，然后再借助 Armbian 提供的客户化编译方法有针对性的进行定制。另外有些需求要做一定的平衡和取舍，比如安装软件包，可以选择编译完成后在系统运行的时候通过命令的方式来安装，而不是在编译的过程中安装。
 
 Armbian 的客户化编译方法主要有两种模式，一种就是修改已有的编译选项和参数，另一种就是注入客户化配置及代码。第一种模式针对的需求比如配置过程的参数化、修改主机名称、设置网络、设置登录后初始界面的名称等；第二种模式针对的需求比如修改目标系统的配置、编译/安装软件包等。
 
@@ -76,5 +73,46 @@ PACKAGE_LIST_ADDITIONAL=”$PACKAGE_LIST_ADDITIONAL package_name”
 上面的客户化定制方法可以满足很大一部分需求，如果需要做更深入的定制，可以研究源代码中已有的配置信息、代码。另外，通过查看整个编译过程的输出信息，还可以详细了解编译执行的阶段、所作操作等内容，这对做客户化编译配置非常有帮助，这些信息保存在 output/debug/ 目录中。另外官网的这个页面也有很详细的说明。
 
 最后，生成的映像文件可以通过工具写入 U 盘或 SD 卡，有两种方法，一种是借助写盘工具，比如 rufus 和 balenaEtcher；另外一个就是在 config-example.conf 中增加一行定义 CARD_DEVICE=/dev/sdx，sdx 就是所连接的 U 盘或 SD 卡的设备名。
+runner@fv-az58:~/work/Actions-Armbian-s905/Actions-Armbian-s905/armbian/output$ ls -R
+.:
+config  debs  debs-beta  debug  images  patch
 
-需要注意一点的是，不同的硬件装置所采用的引导方式可能不一样，有的是需要写入 U-boot 到 U盘或 SD卡中，有的只需要写入映像本身即可（引导文件、内核等在根文件系统的 /boot 目录中），还有的需要建立专门的引导分区，这要根据具体的情况区别对待。
+./config:
+
+./debs:
+armbian-config_20.08.0-trunk_all.deb         
+armbian-firmware_20.08.0-trunk_all.deb  focal                                              
+linux-headers-current-meson64_20.08.0-trunk_arm64.deb  
+linux-source-current-meson64_20.08.0-trunk_all.deb
+armbian-firmware-full_20.08.0-trunk_all.deb  extra                                   
+linux-dtb-current-meson64_20.08.0-trunk_arm64.deb  
+linux-image-current-meson64_20.08.0-trunk_arm64.deb    
+linux-u-boot-current-lepotato_20.08.0-trunk_arm64.deb
+
+./debs/extra:
+
+./debs/focal:
+armbian-focal-desktop_20.08.0-trunk_all.deb  
+linux-focal-root-current-lepotato_20.08.0-trunk_arm64.deb
+
+./debs-beta:
+extra
+
+./debs-beta/extra:
+
+./debug:
+compilation.log  
+compiler.log  
+install.log  
+installed-packages-focal.list  
+logs-.tgz  
+logs-06_08_2020-18_35_54.tgz  
+output.log  
+patching.log  
+timestamp
+
+./images:
+Armbian_20.08.0-trunk_Lepotato_focal_current_5.7.13.img  
+Armbian_20.08.0-trunk_Lepotato_focal_current_5.7.13.img.sha  
+Armbian_20.08.0-trunk_Lepotato_focal_current_5.7.13.img.txt
+
