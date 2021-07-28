@@ -60,9 +60,9 @@ jobs:
       run: |
         [ -e files ] && mv files armbian/files
         mkdir -p $GITHUB_WORKSPACE/armbian/userpatches
-        sudo cp -b $GITHUB_WORKSPACE/userpatches/linux-meson64-current.config $GITHUB_WORKSPACE/armbian/userpatches/linux-meson64-current.config
-        sudo cp -b $GITHUB_WORKSPACE/userpatches/config-example.conf $GITHUB_WORKSPACE/armbian/userpatches/config-example.conf
-        sudo cp -b $GITHUB_WORKSPACE/userpatches/lib.config $GITHUB_WORKSPACE/armbian/userpatches/lib.config
+        cp -b $GITHUB_WORKSPACE/userpatches/linux-meson64-current.config $GITHUB_WORKSPACE/armbian/userpatches/linux-meson64-current.config
+        cp -b $GITHUB_WORKSPACE/userpatches/config-example.conf $GITHUB_WORKSPACE/armbian/userpatches/config-example.conf
+        cp -b $GITHUB_WORKSPACE/userpatches/lib.config $GITHUB_WORKSPACE/armbian/userpatches/lib.config
         chmod +x $DIY_P2_SH
         cd armbian
         $GITHUB_WORKSPACE/$DIY_P2_SH
