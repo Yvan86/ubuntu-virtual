@@ -19,7 +19,7 @@ env:
   CONFIG_FILE: .config
   DIY_P1_SH: diy-part1.sh
   DIY_P2_SH: diy-part2.sh
-  SSH_ACTIONS: true
+  SSH_ACTIONS: false
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_WETRANSFER: true
@@ -59,7 +59,7 @@ jobs:
     - name: Load custom configuration
       run: |
         [ -e files ] && mv files armbian/files
-        sudo mkdir -p $GITHUB_WORKSPACE/armbian/userpatches
+        mkdir -p $GITHUB_WORKSPACE/armbian/userpatches
         sudo cp -b $GITHUB_WORKSPACE/userpatches/linux-meson64-current.config $GITHUB_WORKSPACE/armbian/userpatches/linux-meson64-current.config
         sudo cp -b $GITHUB_WORKSPACE/userpatches/config-example.conf $GITHUB_WORKSPACE/armbian/userpatches/config-example.conf
         sudo cp -b $GITHUB_WORKSPACE/userpatches/lib.config $GITHUB_WORKSPACE/armbian/userpatches/lib.config
