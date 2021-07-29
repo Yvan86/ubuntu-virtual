@@ -75,7 +75,7 @@ jobs:
 
     - name: Compile the firmware
       id: compile
-      if: env.SSH_ACTIONS == 'false'
+      if: env.SSH_ACTIONS1 == 'false'
       run: |
         cd armbian
         ./compile.sh
