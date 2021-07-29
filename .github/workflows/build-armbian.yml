@@ -91,12 +91,12 @@ jobs:
         cd armbian/output
         ls -l ./debs
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
-        sudo tar -czvf images.tar.gz images
-        sudo tar -czvf debug.tar.gz debug
-        sudo tar -czvf debs.tar.gz debs
-        sudo tar -czvf config.tar.gz config
-        sudo rm -rf images debug
-        sudo rm -rf debs*
+        sudo tar -czvf images.tar.gz images || exit 0
+        sudo tar -czvf debug.tar.gz debug || exit 0
+        sudo tar -czvf debs.tar.gz debs || exit 0
+        sudo tar -czvf config.tar.gz config || exit 0
+        sudo rm -rf images debug || exit 0
+        sudo rm -rf debs* || exit 0
         echo "::set-output name=status::success"
         
     - name: Upload firmware directory
