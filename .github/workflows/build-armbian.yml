@@ -12,15 +12,21 @@ on:
 #    - cron: 0 8 * * 5
   watch:
     types: started
-    
+    if: github.event.repository.owner.id == github.event.sender.id
+  repository_dispatch:
+  workflow_dispatch:
+    inputs:
+      SSH1:
+        description: 'SSH connection to Actions?'
+        required: false
+        default: 'false'   
+        
 env:
   REPO_URL: https://github.com/armbian/build
   REPO_BRANCH: master
   CONFIG_FILE: .config
   DIY_P1_SH: diy-part1.sh
   DIY_P2_SH: diy-part2.sh
-  SSH_ACTIONS1: false
-  SSH_ACTIONS2: false
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_WETRANSFER: true
@@ -29,7 +35,6 @@ env:
 jobs:
   build:
     runs-on: ubuntu-20.04
-    if: github.event.repository.owner.id == github.event.sender.id
 
     steps:
     - name: Checkout
@@ -69,9 +74,9 @@ jobs:
         cd armbian
         $GITHUB_WORKSPACE/$DIY_P2_SH
         
-    - name: SSH connection to Actions1
+    - name: SSH connection to Actions
       uses: P3TERX/ssh2actions@v1.0.0
-      if: env.SSH_ACTIONS1 == 'true' || contains(github.event.action, 'ssh')       
+      if: (github.event.inputs.SSH1 == 'true' && github.event.inputs.SSH1  != 'false')    
 
     - name: Compile the firmware
       id: compile
@@ -79,11 +84,7 @@ jobs:
       run: |
         cd armbian
         ./compile.sh
-        
-    - name: SSH connection to Actions2
-      uses: P3TERX/ssh2actions@v1.0.0
-      if: env.SSH_ACTIONS2 == 'true' || contains(github.event.action, 'ssh') 
-      
+              
     - name: Organize files
       id: organize
       if: env.UPLOAD_FIRMWARE == 'true' || 'false' && !cancelled()
