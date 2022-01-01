@@ -63,7 +63,6 @@ jobs:
 
     - name: Organize files
       id: organize
-      if: env.UPLOAD_FIRMWARE == 'true' || 'false' && !cancelled()
       run: |
         cd armbian/output
         ls -l ./debs
