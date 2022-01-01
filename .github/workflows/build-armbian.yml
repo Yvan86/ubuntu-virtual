@@ -15,11 +15,6 @@ on:
     if: github.event.repository.owner.id == github.event.sender.id
   repository_dispatch:
   workflow_dispatch:
-    inputs:
-      SSH1:
-        description: 'SSH connection to Actions?'
-        required: false
-        default: 'false'   
         
 env:
   REPO_URL: https://github.com/armbian/build
@@ -65,7 +60,6 @@ jobs:
         
     - name: SSH connection to Actions
       uses: P3TERX/ssh2actions@v1.0.0
-      if: (github.event.inputs.SSH1 == 'true' && github.event.inputs.SSH1  != 'false')    
 
     - name: Organize files
       id: organize
