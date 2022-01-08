@@ -61,7 +61,8 @@ jobs:
         df -hT $PWD
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH armbian
         ln -sf /workdir/armbian $GITHUB_WORKSPACE/armbian
-#        sudo cp $GITHUB_WORKSPACE/${{github.event.inputs.config-file}}*.config $GITHUB_WORKSPACE/armbian/userpatches/linux-meson64-current.config
+        sudo mkdir -p $GITHUB_WORKSPACE/armbian/userpatches
+        sudo cp $GITHUB_WORKSPACE/${{github.event.inputs.config-file}}*.config $GITHUB_WORKSPACE/armbian/userpatches/linux-meson64-current.config
         
         
     - name: SSH connection to Actions
