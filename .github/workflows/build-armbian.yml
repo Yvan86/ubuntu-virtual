@@ -65,6 +65,7 @@ jobs:
       id: organize
       run: |
         cd armbian/output
+        sudo cp $GITHUB_WORKSPACE/armbian/cache/sources/linux-mainline/linux-*/?*.config $GITHUB_WORKSPACE/armbian/output/config/
         ls -l ./debs
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         sudo tar -czvf images.tar.gz images || exit 0
