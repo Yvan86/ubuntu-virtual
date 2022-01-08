@@ -15,6 +15,11 @@ on:
     if: github.event.repository.owner.id == github.event.sender.id
   repository_dispatch:
   workflow_dispatch:
+    inputs:  
+      config-file:
+        description: 'Which config file is used?'
+        required: false
+        default: '1' 
         
 env:
   REPO_URL: https://github.com/armbian/build
@@ -56,6 +61,7 @@ jobs:
         df -hT $PWD
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH armbian
         ln -sf /workdir/armbian $GITHUB_WORKSPACE/armbian
+        sudo cp $GITHUB_WORKSPACE/${{github.event.inputs.config-file}}*.config $GITHUB_WORKSPACE/armbian/userpatches/linux-meson64-current.config
         
         
     - name: SSH connection to Actions
