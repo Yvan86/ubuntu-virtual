@@ -61,16 +61,23 @@ jobs:
         df -hT $PWD
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH armbian
         ln -sf /workdir/armbian $GITHUB_WORKSPACE/armbian
+        
+    - name: Download files compile need
+      run: |        
         [ -e files ] && mv files armbian/files
         sudo mkdir -p $GITHUB_WORKSPACE/armbian/userpatches
-        sudo cp $GITHUB_WORKSPACE/${{github.event.inputs.config-file}}-*.config $GITHUB_WORKSPACE/armbian/userpatches/linux-meson64-current.config
         sudo cp -b $GITHUB_WORKSPACE/userpatches/config-example.conf $GITHUB_WORKSPACE/armbian/userpatches/config-example.conf
         sudo cp -b $GITHUB_WORKSPACE/userpatches/lib.config $GITHUB_WORKSPACE/armbian/userpatches/lib.config
         sudo ln -fs $GITHUB_WORKSPACE/armbian/userpatches/config-example.conf $GITHUB_WORKSPACE/armbian/userpatches/config-default.conf
         chmod +x $DIY_P2_SH
         cd armbian
-        timeout -k 1 10m./compile.sh
-        
+        timeout -k 1 10m ./compile.sh
+    
+    - name: Recover config file
+      run: |        
+        sudo rm -rf $GITHUB_WORKSPACE/armbian/userpatches
+        sudo mkdir -p $GITHUB_WORKSPACE/armbian/userpatches
+        sudo cp $GITHUB_WORKSPACE/${{github.event.inputs.config-file}}-*.config $GITHUB_WORKSPACE/armbian/userpatches/linux-meson64-current.config
         
     - name: SSH connection to Actions
       uses: P3TERX/ssh2actions@v1.0.0
