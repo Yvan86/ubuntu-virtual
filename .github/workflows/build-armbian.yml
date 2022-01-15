@@ -71,7 +71,7 @@ jobs:
         sudo ln -fs $GITHUB_WORKSPACE/armbian/userpatches/config-example.conf $GITHUB_WORKSPACE/armbian/userpatches/config-default.conf
         chmod +x $DIY_P2_SH
         cd armbian
-        ./compile.sh & sleep 500
+        ./compile.sh & sleep 600
         exit 0
     
     - name: Recover config file
