@@ -66,7 +66,7 @@ jobs:
       run: |        
         cd lede
         sed -i '$a src-git passwall https://github.com/xiaorouji/openwrt-passwall' feeds.conf.default
-        svn checkout https://github.com/kenzok8/openwrt-packages/trunk/luci-app-passwall ./packages/feeds/luci
+        svn checkout https://github.com/kenzok8/openwrt-packages/trunk/luci-app-passwall ./package/feeds/luci/luci-app-passwall
         ./scripts/feeds update -a && ./scripts/feeds install -a
         
     - name: SSH connection to Actions
