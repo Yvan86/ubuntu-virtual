@@ -22,7 +22,7 @@ on:
         default: '1' 
         
 env:
-  REPO_URL: https://github.com/armbian/build
+  REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
   CONFIG_FILE: .config
   DIY_P1_SH: diy-part1.sh
@@ -59,26 +59,15 @@ jobs:
         sudo apt update
         sudo apt upgrade -y
         df -hT $PWD
-        git clone --depth 1 $REPO_URL -b $REPO_BRANCH armbian
-        ln -sf /workdir/armbian $GITHUB_WORKSPACE/armbian
-        
-    - name: Download files compile need
-      run: |        
-        [ -e files ] && mv files armbian/files
-        sudo mkdir -p $GITHUB_WORKSPACE/armbian/userpatches
-        sudo cp -b $GITHUB_WORKSPACE/userpatches/config-example.conf $GITHUB_WORKSPACE/armbian/userpatches/config-example.conf
-        sudo cp -b $GITHUB_WORKSPACE/userpatches/lib.config $GITHUB_WORKSPACE/armbian/userpatches/lib.config
-        sudo ln -fs $GITHUB_WORKSPACE/armbian/userpatches/config-example.conf $GITHUB_WORKSPACE/armbian/userpatches/config-default.conf
-        chmod +x $DIY_P2_SH
-        cd armbian
-        ./compile.sh & sleep 420
-        exit 0
-    
+        git clone --depth 1 $REPO_URL -b $REPO_BRANCH lede
+        ln -sf /workdir/lede $GITHUB_WORKSPACE/lede
+           
     - name: Recover config file
       run: |        
-        sudo rm -rf $GITHUB_WORKSPACE/armbian/userpatches
-        sudo mkdir -p $GITHUB_WORKSPACE/armbian/userpatches
-        sudo cp $GITHUB_WORKSPACE/${{github.event.inputs.config-file}}-*.config $GITHUB_WORKSPACE/armbian/userpatches/linux-meson64-current.config
+        cd lede
+        sed -i '$a src-git passwall https://github.com/xiaorouji/passwall' feeds.conf.default
+        svn checkout https://github.com/kenzok8/openwrt-packages/trunk/luci-app-passwall ./packages/feeds/luci
+        ./scripts/feeds update -a && ./scripts/feeds install -a
         
     - name: SSH connection to Actions
       uses: P3TERX/ssh2actions@v1.0.0
@@ -86,7 +75,7 @@ jobs:
     - name: Organize files
       id: organize
       run: |
-        cd armbian/output
+        cd lede/output
         sudo cp $GITHUB_WORKSPACE/armbian/cache/sources/linux-mainline/linux-*/?*.config $GITHUB_WORKSPACE/armbian/output/config/
         ls -l ./debs
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
