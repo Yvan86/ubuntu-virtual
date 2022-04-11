@@ -65,7 +65,7 @@ jobs:
     - name: Recover config file
       run: |        
         cd lede
-        sed -i '$a src-git passwall https://github.com/xiaorouji/passwall' feeds.conf.default
+        sed -i '$a src-git passwall https://github.com/xiaorouji/openwrt-passwall' feeds.conf.default
         svn checkout https://github.com/kenzok8/openwrt-packages/trunk/luci-app-passwall ./packages/feeds/luci
         ./scripts/feeds update -a && ./scripts/feeds install -a
         
