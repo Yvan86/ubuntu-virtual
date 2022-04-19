@@ -2,8 +2,6 @@
 #HOME=/home/runner
 #RUNNER_WORKSPACE=/home/runner/work/ubuntu-virtual
 
-
-
 name: None
 
 on:
@@ -21,11 +19,6 @@ on:
     if: github.event.repository.owner.id == github.event.sender.id
   repository_dispatch:
   workflow_dispatch:
-    inputs:  
-      config-file:
-        description: 'Which config file is used?'
-        required: false
-        default: '1' 
         
 env:
   UPLOAD_FIRMWARE: true
@@ -49,41 +42,24 @@ jobs:
         sudo -E apt-get -qq install $(curl -fsSL git.io/depends-ubuntu-1804)
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
-        sudo timedatectl set-timezone "$TZ"
-        sudo mkdir -p /workdir
-        sudo chown $USER:$GROUPS /workdir
-        
+        sudo timedatectl set-timezone "$TZ" 
+        cd $GITHUB_WORKSPACE && mkdir save
     
     - name: SSH connection to Actions
       uses: P3TERX/ssh2actions@v1.0.0
-
-    - name: Organize files
-      id: organize
-      run: |
-        cd lede/output
-        sudo cp $GITHUB_WORKSPACE/armbian/cache/sources/linux-mainline/linux-*/?*.config $GITHUB_WORKSPACE/armbian/output/config/
-        ls -l ./debs
-        echo "FIRMWARE=$PWD" >> $GITHUB_ENV
-        sudo tar -czvf images.tar.gz images || exit 0
-        sudo tar -czvf debug.tar.gz debug || exit 0
-        sudo tar -czvf debs.tar.gz debs || exit 0
-        sudo tar -czvf config.tar.gz config || exit 0
-        sudo rm -rf images debug || exit 0
-        sudo rm -rf debs* || exit 0
-        echo "::set-output name=status::success"
-        
+       
     - name: Upload firmware directory
       uses: actions/upload-artifact@master
       if: steps.organize.outputs.status == 'success' && env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       with:
         name: Armbian_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
-        path: ${{ env.FIRMWARE }}
+        path: $GITHUB_WORKSPACE/save/
 
     - name: Upload firmware to WeTransfer
       if: env.UPLOAD_WETRANSFER == 'true' && !cancelled()
       run: |
         curl -fsSL git.io/file-transfer | sh
-        ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
+        ./transfer wet -s -p 16 --no-progress $GITHUB_WORKSPACE/save/ 2>&1 | tee wetransfer.log
         echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
         
     - name: Delete workflow runs
