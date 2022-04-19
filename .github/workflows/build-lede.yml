@@ -20,6 +20,10 @@ on:
         description: 'Which config file is used?'
         required: false
         default: '1' 
+      Ini_SSH:
+        description: 'Which config file is used?'
+        required: false
+        default: '1' 
         
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
@@ -65,41 +69,69 @@ jobs:
     - name: Recover config file
       run: |        
         cd lede
-        sed -i '$a src-git passwall https://github.com/xiaorouji/openwrt-passwall' feeds.conf.default
-        svn checkout https://github.com/kenzok8/openwrt-packages/trunk/luci-app-passwall ./package/luci-app-passwall
+        sed -i '$a src-git kenzok https://github.com/kenzok8/openwrt-packages' feeds.conf.default
+        sed -i '$a src-git small https://github.com/kenzok8/small' feeds.conf.default
         ./scripts/feeds update -a && ./scripts/feeds install -a
         
     - name: SSH connection to Actions
       uses: P3TERX/ssh2actions@v1.0.0
+      if: (github.event.inputs.SSH1 == 'true' && github.event.inputs.SSH1  != 'false')
+
+    - name: Download package
+      id: package
+      run: |
+        cd lede
+        cp $GITHUB_WORKSPACE/ledeconfig/.config $GITHUB_WORKSPACE/lede/
+        make download -j8
+        find dl -size -1024c -exec ls -l {} \;
+        find dl -size -1024c -exec rm -f {} \;
+        
+    - name: Compile the firmware
+      id: compile
+      run: |
+        cd lede
+        echo -e "$(nproc) thread compile"
+        make -j$(nproc) || make -j1 || make -j1 V=s
+        echo "::set-output name=status::success"
+        grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > DEVICE_NAME
+        [ -s DEVICE_NAME ] && echo "DEVICE_NAME=_$(cat DEVICE_NAME)" >> $GITHUB_ENV
+        echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+        
+    - name: Check space usage
+      if: (!cancelled())
+      run: df -hT
+
+    - name: Upload bin directory
+      uses: actions/upload-artifact@main
+      if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
+      with:
+        name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+        path: lede/bin
 
     - name: Organize files
       id: organize
+      if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
       run: |
-        cd lede/output
-        sudo cp $GITHUB_WORKSPACE/armbian/cache/sources/linux-mainline/linux-*/?*.config $GITHUB_WORKSPACE/armbian/output/config/
-        ls -l ./debs
+        cd lede/bin/targets/*/*
+        rm -rf packages
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
-        sudo tar -czvf images.tar.gz images || exit 0
-        sudo tar -czvf debug.tar.gz debug || exit 0
-        sudo tar -czvf debs.tar.gz debs || exit 0
-        sudo tar -czvf config.tar.gz config || exit 0
-        sudo rm -rf images debug || exit 0
-        sudo rm -rf debs* || exit 0
         echo "::set-output name=status::success"
         
     - name: Upload firmware directory
-      uses: actions/upload-artifact@master
-      if: steps.organize.outputs.status == 'success' && env.UPLOAD_FIRMWARE == 'true' && !cancelled()
+      uses: actions/upload-artifact@main
+      if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
-        name: Armbian_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+        name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: ${{ env.FIRMWARE }}
 
     - name: Upload firmware to WeTransfer
-      if: env.UPLOAD_WETRANSFER == 'true' && !cancelled()
+      id: wetransfer
+      if: steps.organize.outputs.status == 'success' && !cancelled()
       run: |
         curl -fsSL git.io/file-transfer | sh
         ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
         echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
+        echo "::set-output name=url::$(cat wetransfer.log | grep https | cut -f3 -d" ")"
         
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@v2
