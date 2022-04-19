@@ -21,7 +21,7 @@ on:
         required: false
         default: '1' 
       Ini_SSH:
-        description: 'Which config file is used?'
+        description: 'Initiate SSH?'
         required: false
         default: '1' 
         
