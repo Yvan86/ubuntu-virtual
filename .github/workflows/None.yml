@@ -1,5 +1,7 @@
 #GITHUB_WORKSPACE=/home/runner/work/ubuntu-virtual/ubuntu-virtual
 #HOME=/home/runner
+#RUNNER_WORKSPACE=/home/runner/work/ubuntu-virtual
+
 
 
 name: None
