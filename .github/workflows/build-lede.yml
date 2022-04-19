@@ -23,7 +23,7 @@ on:
       Ini_SSH:
         description: 'Initiate SSH?'
         required: false
-        default: '1' 
+        default: '0' 
         
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
@@ -75,7 +75,7 @@ jobs:
         
     - name: SSH connection to Actions
       uses: P3TERX/ssh2actions@v1.0.0
-      if: (github.event.inputs.SSH1 == 'true' && github.event.inputs.SSH1  != 'false')
+      if: (github.event.inputs.Ini_SSH == 'true' || github.event.inputs.Ini_SSH  == '1')
 
     - name: Download package
       id: package
