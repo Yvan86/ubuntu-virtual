@@ -1,4 +1,4 @@
-name: Build lede
+name: None
 
 on:
 #  release:
