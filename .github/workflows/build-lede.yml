@@ -81,7 +81,7 @@ jobs:
       id: package
       run: |
         cd lede
-        cp $GITHUB_WORKSPACE/ledeconfig/.config $GITHUB_WORKSPACE/lede/
+        cp $GITHUB_WORKSPACE/ledeconf/.config $GITHUB_WORKSPACE/lede/
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
